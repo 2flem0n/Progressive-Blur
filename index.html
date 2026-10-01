@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Progressive Blur</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    body {
+      background: #f5f4f3;
+      color: rgba(0, 0, 0, 0.7);
+      font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    }
+
+    .page {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .scroll-container {
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+
+    .content {
+      width: 100%;
+      max-width: 672px;
+      min-height: 180vh;
+      margin: 0 auto;
+      padding: 160px 20px 256px;
+    }
+
+    .scroll-hint {
+      display: grid;
+      justify-items: center;
+      gap: 24px;
+      text-align: center;
+    }
+
+    .scroll-hint span {
+      position: relative;
+      max-width: 14ch;
+      color: rgba(0, 0, 0, 0.4);
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.2;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .scroll-hint span::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      width: 1px;
+      height: 64px;
+      background: linear-gradient(
+        to bottom,
+        white,
+        black
+      );
+    }
+
+    .sections {
+      width: 100%;
+      margin-top: 128px;
+      display: flex;
+      flex-direction: column;
+      gap: 96px;
+      text-align: justify;
+    }
+
+    .section {
+      padding: 28px;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+
+    .section-label {
+      display: block;
+      margin-bottom: 12px;
+      color: rgba(0, 0, 0, 0.3);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .section p {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.75;
+    }
+
+    .section p + p {
+      margin-top: 24px;
+    }
+
+    /*
+     * Progressive Blur
+     */
+
+    .progressive-blur {
+      position: absolute;
+      left: 0;
+      z-index: 50;
+      width: 100%;
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-select: none;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+
+    .progressive-blur.top {
+      top: 0;
+      height: 150px;
+      background: linear-gradient(
+        to top,
+        transparent,
+        #f5f4f3
+      );
+      mask-image: linear-gradient(
+        to bottom,
+        #f5f4f3 50%,
+        transparent
+      );
+      -webkit-mask-image: linear-gradient(
+        to bottom,
+        #f5f4f3 50%,
+        transparent
+      );
+    }
+
+    .progressive-blur.bottom {
+      bottom: 0;
+      height: 150px;
+      background: linear-gradient(
+        to bottom,
+        transparent,
+        #f5f4f3
+      );
+      mask-image: linear-gradient(
+        to top,
+        #f5f4f3 50%,
+        transparent
+      );
+      -webkit-mask-image: linear-gradient(
+        to top,
+        #f5f4f3 50%,
+        transparent
+      );
+    }
+
+    @media (max-width: 640px) {
+      .content {
+        padding-top: 140px;
+        padding-inline: 16px;
+      }
+
+      .sections {
+        margin-top: 112px;
+        gap: 72px;
+      }
+
+      .section {
+        padding: 24px;
+      }
+
+      .progressive-blur {
+        height: 120px !important;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+
+    <div class="progressive-blur top"></div>
+    <div class="progressive-blur bottom"></div>
+
+    <div class="scroll-container">
+      <div class="content">
+
+        <div class="scroll-hint">
+          <span>
+            Scroll down to see the effect
+          </span>
+        </div>
+
+        <div class="sections">
+          <section class="section">
+            <span class="section-label">Section 01</span>
+
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              Obcaecati, reiciendis eum vitae nostrum, temporibus
+              repudiandae voluptatibus, natus iure ipsa velit odit
+              quibusdam illum.
+            </p>
+
+            <p>
+              Quaerat cumque laudantium libero reprehenderit perferendis
+              quo nulla voluptate. Repellat tenetur labore exercitationem
+              dicta libero voluptate suscipit, iusto ea assumenda.
+            </p>
+          </section>
+
+          <section class="section">
+            <span class="section-label">Section 02</span>
+
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              Obcaecati, reiciendis eum vitae nostrum, temporibus
+              repudiandae voluptatibus, natus iure ipsa velit odit
+              quibusdam illum.
+            </p>
+
+            <p>
+              Quaerat cumque laudantium libero reprehenderit perferendis
+              quo nulla voluptate. Repellat tenetur labore exercitationem
+              dicta libero voluptate suscipit, iusto ea assumenda.
+            </p>
+          </section>
+
+          <section class="section">
+            <span class="section-label">Section 03</span>
+
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              Obcaecati, reiciendis eum vitae nostrum, temporibus
+              repudiandae voluptatibus, natus iure ipsa velit odit
+              quibusdam illum.
+            </p>
+
+            <p>
+              Quaerat cumque laudantium libero reprehenderit perferendis
+              quo nulla voluptate. Repellat tenetur labore exercitationem
+              dicta libero voluptate suscipit, iusto ea assumenda.
+            </p>
+          </section>
+
+          <section class="section">
+            <span class="section-label">Section 04</span>
+
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              Obcaecati, reiciendis eum vitae nostrum, temporibus
+              repudiandae voluptatibus, natus iure ipsa velit odit
+              quibusdam illum.
+            </p>
+
+            <p>
+              Quaerat cumque laudantium libero reprehenderit perferendis
+              quo nulla voluptate. Repellat tenetur labore exercitationem
+              dicta libero voluptate suscipit, iusto ea assumenda.
+            </p>
+          </section>
+
+          <section class="section">
+            <span class="section-label">Section 05</span>
+
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              Obcaecati, reiciendis eum vitae nostrum, temporibus
+              repudiandae voluptatibus, natus iure ipsa velit odit
+              quibusdam illum.
+            </p>
+
+            <p>
+              Quaerat cumque laudantium libero reprehenderit perferendis
+              quo nulla voluptate. Repellat tenetur labore exercitationem
+              dicta libero voluptate suscipit, iusto ea assumenda.
+            </p>
+          </section>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</body>
+</html>
